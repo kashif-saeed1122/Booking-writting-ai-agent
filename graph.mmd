@@ -1,0 +1,40 @@
+graph TD
+    Start([Start]) --> GenerateOutline[Generate Outline]
+    
+    GenerateOutline -->|Outline Generated| CheckOutlineStatus{Check Outline Status}
+    GenerateOutline -->|Missing Notes| Notify1[Notify: Missing Notes]
+    
+    CheckOutlineStatus -->|status = yes| Notify2[Notify: Waiting for Notes]
+    CheckOutlineStatus -->|status = no_notes_needed| GenerateChapter[Generate Next Chapter]
+    CheckOutlineStatus -->|status = no/empty| Notify3[Notify: Paused]
+    
+    GenerateChapter -->|Chapter Generated| CheckMoreChapters{More Chapters?}
+    GenerateChapter -->|Waiting for Notes| Notify4[Notify: Waiting for Chapter Notes]
+    GenerateChapter -->|Paused| Notify5[Notify: Paused]
+    
+    CheckMoreChapters -->|Yes| GenerateChapter
+    CheckMoreChapters -->|No| CompileBook[Compile Book]
+    
+    CompileBook -->|Compiled| Notify6[Notify: Book Compiled]
+    CompileBook -->|Not Ready| Notify7[Notify: Final Review Not Ready]
+    
+    Notify1 --> End([End])
+    Notify2 --> End
+    Notify3 --> End
+    Notify4 --> End
+    Notify5 --> End
+    Notify6 --> End
+    Notify7 --> End
+    
+    style GenerateOutline fill:#e1f5ff
+    style GenerateChapter fill:#e1f5ff
+    style CompileBook fill:#e1f5ff
+    style Notify1 fill:#fff4e1
+    style Notify2 fill:#fff4e1
+    style Notify3 fill:#fff4e1
+    style Notify4 fill:#fff4e1
+    style Notify5 fill:#fff4e1
+    style Notify6 fill:#d4edda
+    style Notify7 fill:#fff4e1
+    style Start fill:#d1ecf1
+    style End fill:#d1ecf1

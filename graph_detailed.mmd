@@ -1,0 +1,57 @@
+graph TB
+    subgraph "Input Stage"
+        Excel[Excel File<br/>books.xlsx]
+        Sync[Sync Script<br/>sync_from_excel.py]
+        DB[(Supabase DB<br/>books table)]
+    end
+    
+    subgraph "LangGraph Workflow"
+        Start([Start]) --> LoadState[Load Book State<br/>from Supabase]
+        
+        LoadState --> GenerateOutline[Generate Outline<br/>Using LLM]
+        
+        GenerateOutline --> CheckOutline{Outline<br/>Status?}
+        CheckOutline -->|yes| WaitOutline[Wait for<br/>Editor Notes]
+        CheckOutline -->|no_notes_needed| GenerateChapter[Generate Chapter N<br/>Using Previous Summaries]
+        CheckOutline -->|no/empty| PauseOutline[Pause]
+        
+        GenerateChapter --> CheckChapter{Chapter<br/>Status?}
+        CheckChapter -->|yes| WaitChapter[Wait for<br/>Chapter Notes]
+        CheckChapter -->|no_notes_needed| MoreChapters{More<br/>Chapters?}
+        CheckChapter -->|no/empty| PauseChapter[Pause]
+        
+        MoreChapters -->|Yes| GenerateChapter
+        MoreChapters -->|No| CompileBook[Compile Book<br/>DOCX + TXT + PDF]
+        
+        CompileBook --> CheckFinal{Final Review<br/>Ready?}
+        CheckFinal -->|Yes| UploadFiles[Upload to<br/>Supabase Storage]
+        CheckFinal -->|No| WaitFinal[Wait for<br/>Final Notes]
+        
+        UploadFiles --> Notify[Send Notifications<br/>Email + Teams]
+        Notify --> End([End])
+        
+        WaitOutline --> Notify
+        WaitChapter --> Notify
+        WaitFinal --> Notify
+        PauseOutline --> Notify
+        PauseChapter --> Notify
+    end
+    
+    subgraph "Output Stage"
+        Storage[(Supabase Storage<br/>books-output bucket)]
+        Files[Generated Files<br/>.docx .txt .pdf]
+    end
+    
+    Excel --> Sync
+    Sync --> DB
+    DB --> LoadState
+    UploadFiles --> Storage
+    Storage --> Files
+    
+    style GenerateOutline fill:#e1f5ff
+    style GenerateChapter fill:#e1f5ff
+    style CompileBook fill:#e1f5ff
+    style UploadFiles fill:#d4edda
+    style Notify fill:#fff4e1
+    style Start fill:#d1ecf1
+    style End fill:#d1ecf1

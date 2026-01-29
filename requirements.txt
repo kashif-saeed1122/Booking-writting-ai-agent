@@ -1,0 +1,11 @@
+langgraph
+langchain
+langchain-openai
+supabase
+python-docx
+gspread
+google-auth
+requests
+python-dotenv
+openpyxl
+reportlab
