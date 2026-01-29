@@ -7,7 +7,7 @@ It supports:
 - Outline generation with gating on `notes_on_outline_before` and `status_outline_notes`.
 - Chapter-by-chapter generation with previous-chapter summaries as context.
 - Final compilation to `.docx` (and text in-memory), saved to **Supabase Storage**.
-- Notification hooks for **email** (SMTP) and **MS Teams** via webhook.
+- Notification hooks for **email** (SMTP).
 
 ### 1. Tech stack
 
@@ -15,10 +15,7 @@ It supports:
 - **LLM**: OpenAI (GPT-4.1 / 4.1-mini, configurable via env)
 - **Database**: Supabase (Postgres)
 - **Storage**: Supabase Storage bucket `books-output`
-- **Notifications**: SMTP email + MS Teams webhook
-
-Google Sheets integration is left as a next step (you can sync rows into the `books` table and reuse this worker as-is).
-
+- **Notifications**: SMTP email
 ---
 
 ### 2. Supabase setup
@@ -102,43 +99,7 @@ You should see in the console:
 
 ---
 
-### 6. Google Sheets Integration
 
-Sync books from Google Sheets to Supabase:
 
-```bash
-python sync_from_sheets.py --sheet-id YOUR_SHEET_ID
-```
 
-**Setup:**
-1. Create Google Service Account → Download JSON
-2. Share your Sheet with service account email
-3. Add to `.env`: `GOOGLE_SERVICE_ACCOUNT_JSON=service-account.json`
-
-See `NEXT_STEPS.md` for detailed instructions.
-
----
-
-### 7. Automated Worker
-
-Process pending books automatically:
-
-```bash
-# Run once (for cron/n8n)
-python worker.py --once
-
-# Run continuously
-python worker.py --interval 60
-```
-
----
-
-### 8. Next Steps
-
-See **`NEXT_STEPS.md`** for:
-- Complete Google Sheets setup guide
-- Worker automation options
-- Notification configuration
-- Optional enhancements
-- Demo checklist for your Loom video
 
