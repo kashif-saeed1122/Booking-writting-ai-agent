@@ -1,6 +1,6 @@
 ## Automated Book Generation System (LangGraph + Supabase)
 
-This project is a minimal but working implementation of the book-generation flow you described, built with **LangGraph + LangChain**, **Supabase**, and **OpenAI**.
+This project is a minimal but working implementation of the book-generation flow built with **LangGraph + LangChain**, **Supabase**, and **OpenAI**.
 
 It supports:
 
